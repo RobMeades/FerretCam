@@ -14,6 +14,6 @@ There are 5 parts:
 * the two parts of the stalk that holds the webcam and LED,
 * a large washer,
 * a spacer to go underneath the PSU to avoid it fowling some things,
-* a piece to hold the webcam itself.
+* a piece to hold the webcam processing module.
 
-The stalk should be printed at 0.1 mm resolution (with supports added in the slicer program) while the spacer/webcam holder should be printed at 0.2 mm resolution (no supports required).  I used black ASA for these parts since I had it lying around but PLA is perfectly acceptable.  The large washer was printed in flexible PLA at 0.2 mm resolution and a nice slow 15 mm/s print speed.
+The stalk should be printed at 0.1 mm resolution (with supports added in the slicer program) while the spacer/module holder should be printed at 0.2 mm resolution (no supports required).  I used black ASA for these parts since I had it lying around but PLA is perfectly acceptable.  The large washer was printed in flexible PLA at 0.2 mm resolution and a nice slow 15 mm/s print speed.
