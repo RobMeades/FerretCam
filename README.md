@@ -8,13 +8,13 @@ Please refer to that link for more information.
 
 # Off The Shelf Components
 
-The camera itself was an (szbvcam)[http://www.szbvcam.com/] purchased from (Amazon)[https://www.amazon.co.uk/gp/product/B077K2TH1V/].  It consists of a small plastic box containing the processing unit (which connects via Wifi), a high resolution camera on the end of a 10 cm flexi, a LiPo rechargeable battery and an antenna.  A USB connection to the box enables the battery to be charged.
+The camera itself was an [szbvcam](http://www.szbvcam.com/) purchased from [Amazon](https://www.amazon.co.uk/gp/product/B077K2TH1V/).  It consists of a small plastic box containing the processing unit (which connects via Wifi), a high resolution camera on the end of a 10 cm flexi, a LiPo rechargeable battery and an antenna.  A USB connection to the box enables the battery to be charged.
 
-To power the camera from a mains supply a mains-to-5V switched-mode power supply module was purchased, also from (Amazon)[https://www.amazon.co.uk/gp/product/B073GPSY4T].
+To power the camera from a mains supply a mains-to-5V switched-mode power supply module was purchased, also from [Amazon](https://www.amazon.co.uk/gp/product/B073GPSY4T).
 
-Then to mount the lot a waterproof (plastic enclosure)[https://uk.rs-online.com/web/p/general-purpose-enclosures/7739607/], 230 mm x 125 mm x 60 mm, was purchased from RSOnline, plus a (waterproof high voltage tee panel connector)[https://uk.rs-online.com/web/p/lighting-connectors/1369903/] and matching (cable-mounted tee socket)[https://uk.rs-online.com/web/p/lighting-connectors/1369898/].
+Then to mount the lot a waterproof [plastic enclosure](https://uk.rs-online.com/web/p/general-purpose-enclosures/7739607/), 230 mm x 125 mm x 60 mm, was purchased from RSOnline, plus a [waterproof high voltage tee panel connector](https://uk.rs-online.com/web/p/lighting-connectors/1369903/) and matching [cable-mounted tee socket](https://uk.rs-online.com/web/p/lighting-connectors/1369898/).
 
-A pack of (Vishay 3 mm high-brightness white LEDs)[https://uk.rs-online.com/web/p/leds/8184452/] were also purchased from RSOnline.
+A pack of [Vishay 3 mm high-brightness white LEDs](https://uk.rs-online.com/web/p/leds/8184452/) were also purchased from RSOnline.
 
 # 3D Printed Parts
 
