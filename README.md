@@ -46,6 +46,6 @@ Velcro sticky patches were used to keep the PSU in place on its spacer and the L
 
 # Viewing
 
-The camera offers an MJPEG stream at URL http://IP_ADDRESS/video/livesp.asp# but this only updates a few times a second.  Much better is an ASF stream which contains both an H264 video stream and mono 8 kHz ADPCM audio at URL http://IP_ADDRESS/videostream.asf?user=admin&pwd=&resolution=32.  However there doesn't seem to be an ASF plug-in for web browsers, you have to view the stream with something like [VLC Player](https://www.videolan.org/vlc/index.html).
+The camera offers an MJPEG stream at URL `http://IP_ADDRESS/video/livesp.asp#` but this only updates a few times a second.  Much better is an ASF stream which contains both an H264 video stream and mono 8 kHz ADPCM audio at URL `http://IP_ADDRESS/videostream.asf?user=admin&pwd=&resolution=32`.  However there doesn't seem to be an ASF plug-in for web browsers, you have to view the stream with something like [VLC Player](https://www.videolan.org/vlc/index.html).
 
 To allow devices outside your home LAN  to see the video feed, convert your broadband provider's dynamic IP address into a static one using a free service from the likes of [www.no-ip.com](www.no-ip.com), quote that address on your web page, then use Port Forwarding to get your wireless router to forward incoming HTTP requests to the camera.
