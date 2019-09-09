@@ -44,6 +44,15 @@ Inside the enclosure the 3D printed spacer beneath the PSU, the 3D printed webca
 
 Velcro sticky patches were used to keep the PSU in place on its spacer and the LiPo battery in place in the lid of the enclosure.  An old micro-USB cable was chopped-up to connect the USB socket on the webcam processing module to the 5 Volt terminals of the PSU.  Some mains cable from an old pond pump was re-purposed to connect the lot, via the cable-mounted tee socket, to a 3 Amp fused plug and hence a mains supply.
 
+A view Neodimium magnets where glued to the OSMA screw-top hatch cover and the bottom of the plastic enclosure to hold the enclosure in place.
+
+Here are a few pictures:
+
+![3D printed parts and camera module in enclosure](pics/3d_parts_and_camera_module_in_enclosure.jpg "3D printed parts and camera module in enclosure")
+![all_parts_in_enclosure](pics/all_parts_in_enclosure.jpg "All parts in enclosure")
+![Osma hatch and camera in 3D printed stalk](pics/osma_hatch_and_camera_in_3d_printed_stalk.jpg "Osma hatch and camera in 3D printed stalk")
+![webcam_in_action](pics/webcam_in_action.jpg "webcam in action")
+
 # Viewing
 
 The camera offers an MJPEG stream at URL `http://IP_ADDRESS/video/livesp.asp#` but this only updates a few times a second.  Much better is an ASF stream which contains both an H264 video stream and mono 8 kHz ADPCM audio at URL `http://IP_ADDRESS/videostream.asf?user=admin&pwd=&resolution=32`.  However there doesn't seem to be an ASF plug-in for web browsers, you have to view the stream with something like [VLC Player](https://www.videolan.org/vlc/index.html).
