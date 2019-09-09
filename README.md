@@ -44,7 +44,7 @@ Inside the enclosure the 3D printed spacer beneath the PSU, the 3D printed webca
 
 Velcro sticky patches were used to keep the PSU in place on its spacer and the LiPo battery in place in the lid of the enclosure.  An old micro-USB cable was chopped-up to connect the USB socket on the webcam processing module to the 5 Volt terminals of the PSU.  Some mains cable from an old pond pump was re-purposed to connect the lot, via the cable-mounted tee socket, to a 3 Amp fused plug and hence a mains supply.
 
-A view Neodimium magnets where glued to the OSMA screw-top hatch cover and the bottom of the plastic enclosure to hold the enclosure in place.
+A few Neodimium magnets where glued to the OSMA screw-top hatch cover and the bottom of the plastic enclosure to hold the enclosure in place.
 
 Here are a few pictures:
 
