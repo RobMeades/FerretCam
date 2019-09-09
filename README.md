@@ -36,10 +36,16 @@ The stalk should be printed at 0.1 mm resolution (with supports added in the sli
 
 A 12 mm hole was drilled in the centre of the floor of the plastic enclosure for the 3D printed stalk to enter and a matching 20 mm hole was drilled in the centre of the Osma screw-top hatch cover of the ferret tunnels.
 
-A 270 ohm series resistor and solid-core leads were soldered to a high-brightness LED.  The leads were covered with heat-shrinkable sleeving so that the LED could be held inside the 3D printed stalk without shorting.
+A 270 ohm series resistor and solid-core leads were soldered to a high-brightness LED.  The leads were covered with heat-shrinkable sleeving so that the LED could be held neatly inside the 3D printed stalk.
 
-The large 3D printed washer was pushed over the top of the two halves of the 3D printed stalk, then the LED and the camera were threaded through the hole in the enclosure, between the two halves of the stalk and into place.  The top of the stalk was then wiggled-up into the hole in the centre of the floor of the plastic enclosure and the bottom of the stalk was pushed down through the hole in the centre of the Osma screw-top hatch cover.  Two narrow cable ties were used to hold the two halves of the 3D printed stalk together, one positioned between the LED and the camera, another positioned inside the enclosure right at the top of the stalk.
+The LED and the camera were threaded through the hole in the centre of the plastic enclosure, through the large 3D printed washer, between the two halves of the 3D printed stalk and into place.  The top of the 3D printed stalk was then wiggled-up through the hole and the bottom of the stalk was pushed down through the hole in the centre of the Osma screw-top hatch cover.  Two narrow cable ties were used to hold the two halves of the 3D printed stalk together, one positioned at the bottom between the LED and the camera, another positioned inside the enclosure right at the top of the stalk; the stalk is only held loosely to the enclosure, the large 3D printed washer will do most of the work.
 
-Inside the enclosure the spacer beneath the PSU, the webcam processing module holder and the partition between the PSU and the rest of the components were all glued into place with Araldite.  Holes were drilled in the enclosure for the tee panel power connector and the Wifi antenna.
+Inside the enclosure the 3D printed spacer beneath the PSU, the 3D printed webcam processing module holder and the 3D printed partition were all glued into place with Araldite.  Holes were drilled in the enclosure for the tee panel power connector and the Wifi antenna.
 
 Velcro sticky patches were used to keep the PSU in place on its spacer and the LiPo battery in place in the lid of the enclosure.  An old micro-USB cable was chopped-up to connect the USB socket on the webcam processing module to the 5 Volt terminals of the PSU.  Some mains cable from an old pond pump was re-purposed to connect the lot, via the cable-mounted tee socket, to a 3 Amp fused plug and hence a mains supply.
+
+# Viewing
+
+The camera offers an MJPEG stream at URL http://IP_ADDRESS/video/livesp.asp# but this only updates a few times a second.  Much better is an ASF stream which contains both an H264 video stream and mono 8 kHz ADPCM audio at URL http://IP_ADDRESS/videostream.asf?user=admin&pwd=&resolution=32.  However there doesn't seem to be an ASF plug-in for web browsers, you have to view the stream with something like [VLC Player](https://www.videolan.org/vlc/index.html).
+
+To allow devices outside your home LAN  to see the video feed, convert your broadband provider's dynamic IP address into a static one using a free service from the likes of [www.no-ip.com](www.no-ip.com), quote that address on your web page, then use Port Forwarding to get your wireless router to forward incoming HTTP requests to the camera.
