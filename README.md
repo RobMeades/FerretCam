@@ -73,7 +73,9 @@ vlc -vvv http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/videostream.asf%26
 
 I checked that it worked by opening the following stream in VLC on my local machine:
 
+```
 http://LINUX_MACHINE_IP_ADDRESS:LINUX_MACHINE_PORT/ferretcam.ogg
+```
 
 ...with `LINUX_MACHINE_IP_ADDRESS`/`LINUX_MACHINE_PORT` replaced as appropriate.  The video should come streaming through.  When it didn't, I checked that the chosen port was open by running `netcat -v -l LINUX_MACHINE_PORT` on the Linux server and then `netcat -v LINUX_MACHINE_IP_ADDRESS LINUX_MACHINE_PORT` on my local machine (there are Windows versions of `netcat` out there); if the port is really open both ends will say so.  Anyway, after a few stumbles with my firewall setup it was all working.
 
