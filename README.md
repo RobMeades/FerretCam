@@ -128,7 +128,7 @@ vlc -I dummy http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/videostream.as
 
 On my local machine, I browsed to `http://LINUX_MACHINE_IP_ADDRESS:LINUX_MACHINE_PORT/` and could see a set of `ferretcam` files, including `ferretcam.m3u8` and a number of `.ts` files.
 
-Then I copied the files from the `http` folder of this repo into the `/var/www/ferretcam/public_html` directory on the Linux machine and ran VLC manaully as above manually once more. I browsed to http://LINUX_MACHINE_IP_ADDRESS:LINUX_MACHINE_PORT/ then pressed the "play" button in the middle of the video to make the stream play; the reason for the button is that, unless you are a privileged source like YouTube or similar, mobile and sometimes desktop browsers will not play a video stream from your site without user interaction.  The stream ran at around 30 seconds behind real time, though this can be adjusted by fiddling with the HLS config.
+Then I copied the files from the `http` folder of this repo into the `/var/www/ferretcam/public_html` directory on the Linux machine and ran VLC manaully as above manually once more. I browsed to `http://LINUX_MACHINE_IP_ADDRESS:LINUX_MACHINE_PORT/` then pressed the "play" button in the middle of the video to make the stream play; the reason for the button is that, unless you are a privileged source like YouTube or similar, mobile and sometimes desktop browsers will not play a video stream from your site without user interaction.  The stream ran at around 30 seconds behind real time, though this can be adjusted by fiddling with the HLS config.
 
 To make the VLC transcoder run at startup on the Linux machine, I created a file called `/etc/systemd/system/ferretcam.service` with the following contents:
 
