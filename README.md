@@ -79,13 +79,13 @@ http://LINUX_MACHINE_IP_ADDRESS:LINUX_MACHINE_PORT/ferretcam.ogg
 
 ...with `LINUX_MACHINE_IP_ADDRESS`/`LINUX_MACHINE_PORT` replaced as appropriate.  The video should come streaming through.  When it didn't, I checked that the chosen port was open by running `netcat -v -l LINUX_MACHINE_PORT` on the Linux server and then `netcat -v LINUX_MACHINE_IP_ADDRESS LINUX_MACHINE_PORT` on my local machine (there are Windows versions of `netcat` out there); if the port is really open both ends will say so.  Anyway, after a few stumbles with my firewall setup it was all working.
 
-Now, the streaming URL above works in Chrome but with a very long start-up delay and doesn't work at all in Microsoft Edge.  A much more portable solution is HTTP Live Streaming, for which a [Javascript client](https://github.com/video-dev/hls.js) is available that works in any browser.  VLC has a plug-in for HTTP Live Streaming but it can't will not use the HTTP server that is built into VLC, so next I needed to install Apache on the Linux machine with:
+Now, the streaming URL above works in Chrome but with a very long start-up delay and doesn't work at all in Microsoft Edge.  A much more portable solution is HTTP Live Streaming, for which a [Javascript client](https://github.com/video-dev/hls.js) is available that works in any browser.  VLC has an [access module](https://wiki.videolan.org/Documentation:Streaming_HowTo/Streaming_for_the_iPhone/) for HTTP Live Streaming but it will not use the HTTP server that is built into VLC, so next I needed to install Apache on the Linux machine with:
 
 `sudo apt-get install apache2`
 
-The `LINUX_MACHINE_PORT` I had opened above was not `80`, so I edited `ports.conf` with `sudo nano /etc/apache2/ports.conf` and changed the value of `80` to whatever `LINUX_MACHINE_PORT` was.  I restarted Apache with `sudo systemctl restart apache2` for this change to take effect and browsed to `http://LINUX_MACHINE_IP_ADDRESS:LINUX_MACHINE_PORT` to see the default Apache start-up page.
+The `LINUX_MACHINE_PORT` I had opened above was not `80`, so I edited `ports.conf` with `sudo nano /etc/apache2/ports.conf` and changed the value of `80` to what `LINUX_MACHINE_PORT` was.  I restarted Apache with `sudo systemctl restart apache2` for this change to take effect and browsed to `http://LINUX_MACHINE_IP_ADDRESS:LINUX_MACHINE_PORT` to see the default Apache start-up page.
 
-I then created directories with appropriate ownership and users as follows:
+I then created content directories with appropriate ownership and users as follows:
 
 ```
 sudo mkdir /var/www/ferretcam
@@ -120,7 +120,7 @@ I enabled the site with:
 
 `sudo  systemctl reload apache2`
 
-Then I started VLC with its HTTP Live Streaming interface as follows:
+Then I started VLC with its HTTP Live Streaming access module as follows:
 
 ```
 vlc -I dummy http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/videostream.asf%26resolution=32 vlc://quit --sout='#transcode{vcodec=h264,vb=256,venc=x264{aud,profile=baseline,level=30,keyint=30,ref=1},acodec=mp3,ab=96}:std{access=livehttp{seglen=10,delsegs=true,numsegs=5,index=/var/www/ferretcam/public_html/ferretcam.m3u8,index-url=http://LINUX_MACHINE_IP_ADDRESS:LINUX_MACHINE_PORT/ferretcam/public_html/ferretcam-########.ts},mux=ts{use-key-frames},dst=/var/www/ferretcam/public_html/ferretcam-########.ts}'
@@ -128,7 +128,7 @@ vlc -I dummy http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/videostream.as
 
 On my local machine, I browsed to `http://LINUX_MACHINE_IP_ADDRESS:LINUX_MACHINE_PORT/` and could see a set of `ferretcam` files, including `ferretcam.m3u8` and a number of `.ts` files.
 
-Then I copied the files from the `http` folder of this repo into the `/var/www/ferretcam/public_html` directory on the Linux machine and ran VLC manaully as above manually once more. I browsed to `http://LINUX_MACHINE_IP_ADDRESS:LINUX_MACHINE_PORT/` then pressed the "play" button in the middle of the video to make the stream play; the reason for the button is that, unless you are a privileged source like YouTube or similar, mobile and sometimes desktop browsers will not play a video stream from your site without user interaction.  The stream ran at around 30 seconds behind real time, though this can be adjusted by fiddling with the HLS config.
+Then I copied the files from the `http` folder of this repo into the `/var/www/ferretcam/public_html` directory on the Linux machine and ran VLC manually as above once more. I browsed to `http://LINUX_MACHINE_IP_ADDRESS:LINUX_MACHINE_PORT/` then pressed the "play" button in the middle of the video to make the stream play; the reason for the button is that, unless you are a privileged source like YouTube or similar, mobile and sometimes desktop browsers will not play a video stream without user interaction.  The stream ran at around 30 seconds behind real time, though this can be adjusted by fiddling with the HLS config.
 
 To make the VLC transcoder run at startup on the Linux machine, I created a file called `/etc/systemd/system/ferretcam.service` with the following contents:
 
@@ -152,6 +152,6 @@ Type=forking
 WantedBy=multi-user.target
 ```
 
-...with `CAM_USERNAME` and `CAM_PASSWORD` replaced by those of the camera and `IP_ADDRESS` and `CAM_PORT` replaced by the IP address (or fixed URL) of my router and the port of the camera.
+...with `CAM_USERNAME` and `CAM_PASSWORD` replaced by those of the camera and `IP_ADDRESS` and `CAM_PORT` replaced by the IP address (or fixed URL) of my router and the port of the camera.  Notice the additional `%` in the HTTP line, required since `systemd` attaches a specific meaning to a single `%` which would cause a syntax error on loading.
 
 I started the service with `sudo systemctl start ferretcam` (using `sudo journalctl -xe` to check what went wrong when it didn't start) and checked once more that I could receive the stream in a browser.  With this confimed I enabled the stream to start at boot with `sudo systemctl enable ferretcam`.
