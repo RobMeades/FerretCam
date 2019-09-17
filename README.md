@@ -155,3 +155,5 @@ WantedBy=multi-user.target
 ...with `CAM_USERNAME` and `CAM_PASSWORD` replaced by those of the camera and `IP_ADDRESS` and `CAM_PORT` replaced by the IP address (or fixed URL) of my router and the port of the camera.  Notice the additional `%` in the HTTP line, required since `systemd` attaches a specific meaning to a single `%` which would cause a syntax error on loading.
 
 I started the service with `sudo systemctl start ferretcam` (using `sudo journalctl -xe` to check what went wrong when it didn't start) and checked once more that I could receive the stream in a browser.  With this confimed I enabled the stream to start at boot with `sudo systemctl enable ferretcam`.
+
+And here it is: [http://rob-server.redirectme.net:8080/](http://rob-server.redirectme.net:8080/).
