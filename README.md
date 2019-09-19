@@ -123,7 +123,7 @@ I enabled the site with:
 Then I started VLC with its HTTP Live Streaming access module as follows:
 
 ```
-vlc -I dummy http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/videostream.asf%26resolution=32 vlc://quit --sout='#transcode{vcodec=h264,vb=256,venc=x264{aud,profile=baseline,level=30,keyint=30,ref=1},acodec=mp3,ab=96}:std{access=livehttp{seglen=10,delsegs=true,numsegs=5,index=/var/www/ferretcam/public_html/ferretcam.m3u8,index-url=http://LINUX_MACHINE_IP_ADDRESS:LINUX_MACHINE_PORT/ferretcam/public_html/ferretcam-########.ts},mux=ts{use-key-frames},dst=/var/www/ferretcam/public_html/ferretcam-########.ts}'
+vlc -I dummy http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/videostream.asf%26resolution=32 vlc://quit --sout='#transcode{vcodec=h264,vb=256,venc=x264{aud,profile=baseline,level=30,keyint=30,ref=1},acodec=mp3,ab=96}:std{access=livehttp{seglen=10,delsegs=true,numsegs=5,index=/var/www/ferretcam/public_html/ferretcam.m3u8,index-url=ferretcam-########.ts},mux=ts{use-key-frames},dst=/var/www/ferretcam/public_html/ferretcam-########.ts}'
 ```
 
 On my local machine, I browsed to `http://LINUX_MACHINE_IP_ADDRESS:LINUX_MACHINE_PORT/` and could see a set of `ferretcam` files, including `ferretcam.m3u8` and a number of `.ts` files.
