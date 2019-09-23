@@ -143,17 +143,68 @@ WantedBy=multi-user.target
 [Service]
 # Start VLC service
 User=vlcd
-ExecStart=/usr/bin/vlc -I dummy http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/videostream.asf%%26resolution=32 --daemon --syslog  vlc://quit --sout="#transcode{vcodec=h264,vb=256,venc=x264{aud,profile=baseline,level=30,keyint=30,ref=1},acodec=mp3,ab=96}:std{access=livehttp{seglen=5,delsegs=true,numsegs=10,index=/var/www/ferretcam/public_html/ferretcam.m3u8,index-url=ferretcam-########.ts},mux=ts{use-key-frames},dst=/var/www/ferretcam/public_html/ferretcam-########.ts}"
+ExecStart=/usr/bin/vlc --play-and-exit -I dummy http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/videostream.asf%%26resolution=32 --syslog --sout="#transcode{vcodec=h264,vb=256,venc=x264{aud,profile=baseline,level=30,keyint=30,ref=1},acodec=mp3,ab=96}:std{access=livehttp{seglen=5,delsegs=true,numsegs=10,index=/var/www/ferretcam/public_html/ferretcam.m3u8,index-url=ferretcam-########.ts},mux=ts{use-key-frames},dst=/var/www/ferretcam/public_html/ferretcam-########.ts}"
 Restart=always
 RestartSec=10
-Type=forking
+Type=simple
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-...with `CAM_USERNAME` and `CAM_PASSWORD` replaced by those of the camera and `IP_ADDRESS` and `CAM_PORT` replaced by the IP address (or fixed URL) of my router and the port of the camera.  Notice the additional `%` in the HTTP line, required since `systemd` attaches a specific meaning to a single `%` which would cause a syntax error on loading.
+...with `CAM_USERNAME` and `CAM_PASSWORD` replaced by those of the camera and `IP_ADDRESS` and `CAM_PORT` replaced by the IP address (or fixed URL) of my router and the port of the camera.  Notice the additional `%` in the HTTP line, required since `systemd` attaches a specific meaning to a single `%` which would cause a syntax error on loading.  Note also that I'm not using the parameters `--daemon vlc://quit`, which are often recommended for running VLC as a service; this is because VLC doesn't seem to reconnect on an error (I tried `-R` to repeat the live stream and that didn't work), hence I'm running it instead with `--play-and-exit` and *not* as a daemon so that VLC exits when the connection breaks and`systemctl` restarts it.
 
 I started the service with `sudo systemctl start ferretcam` (using `sudo journalctl -xe` to check what went wrong when it didn't start) and checked once more that I could receive the stream in a browser.  With this confimed I enabled the stream to start at boot with `sudo systemctl enable ferretcam`.
 
 And here it is: [http://rob-server.redirectme.net:8080/](http://rob-server.redirectme.net:8080/).
+
+# Improving Viewing Robustness
+
+I did find one issue, which is that when there is a break in the incoming stream VLC neither exits nor recovers, which is a pain.  I tried [various ways to resolve this](https://forum.videolan.org/viewtopic.php?f=13&t=150888) but none of the parameters to VLC did what I wanted so instead I created a timer service which checks that the camera stream is there, if it not it attempts to reboot the camera and, in any case, it restarts the `ferretcam` service.  To do this, I created a shell script, e.g. `/etc/ferretcamchecker.sh` with the following contents:
+
+```
+#!/bin/bash
+logger Checking FerretCam stream...
+if ! curl http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/videostream.asf --head --silent --output /dev/null; then
+  logger FerretCam stream not responding, checking if it can be rebooted...
+  if curl http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/reboot.cgi  --silent --output /dev/null; then
+    logger FerretCam rebooted, waiting 60 seconds for it to restart...
+    sleep 60
+  else
+    logger Unable to reboot FerretCam.
+  fi
+  logger Restarting FerretCam service...
+  systemctl restart ferretcam.service
+else
+  logger FerretCam stream is still responding.
+fi
+```
+
+...with the parts in CAPS replaced as appropriate, made it executable with `chmod +x /etc/ferretcamchecker.sh` and then created a pair of systemd unit files, one called `/etc/systemd/system/ferretcamchecker.service` with contents:
+
+```
+[Unit]
+Description=FerretCam checker
+
+[Service]
+ExecStart=/etc/ferretcamchecker.sh
+```
+
+...and another called `/etc/systemd/system/ferretcamchecker.timer` with contents:
+
+```
+[Unit]
+Description=FerretCam checker
+
+[Timer]
+# Run soon after boot and then every 3 minutes
+OnBootSec=1min
+OnUnitActiveSec=3min
+# This is required to make the OnUnitActiveSec directive work reliably
+Requires=ferretcamchecker.service
+
+[Install]
+WantedBy=timers.target
+```
+
+I then loaded all this up with the usual `systemctl daemon-reload`, `systemctl start ferretcamchecker.timer` and enabled it at boot with `systemctl enable ferretcamchecker.timer`.
