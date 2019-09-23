@@ -164,19 +164,25 @@ I did find one issue, which is that when there is a break in the incoming stream
 
 ```
 #!/bin/bash
-logger Checking FerretCam stream...
-if ! curl http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/videostream.asf --head --silent --output /dev/null; then
-  logger FerretCam stream not responding, checking if it can be rebooted...
-  if curl http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/reboot.cgi  --silent --output /dev/null; then
-    logger FerretCam rebooted, waiting 60 seconds for it to restart...
+logger FerretCam: checking FerretCam stream...
+if ! curl http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/get_status.cgi --max-time 8 --head --silent --output /dev/null; then
+  logger FerretCam: stream not responding, checking if it can be rebooted...
+  if curl http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/reboot.cgi  --max-time 8 --silent --output /dev/null; then
+    logger FerretCam: rebooted, waiting 60 seconds for it to restart...
     sleep 60
+    logger FerretCam: setting time on FerretCam...
+    if curl -H "Content-Type: text/plain;charset=UTF-8" -d "092321082019" -X POST http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/goform/NTPSyncWithHost; then
+      logger FerretCam: time set.
+    else
+      logger FerretCam: unable to set time on FerretCam.
+    fi
   else
-    logger Unable to reboot FerretCam.
+    logger FerretCam: unable to reboot FerretCam.
   fi
-  logger Restarting FerretCam service...
+  logger FerretCam: restarting FerretCam service...
   systemctl restart ferretcam.service
 else
-  logger FerretCam stream is still responding.
+  logger FerretCam: stream is still responding.
 fi
 ```
 
@@ -197,9 +203,10 @@ ExecStart=/etc/ferretcamchecker.sh
 Description=FerretCam checker
 
 [Timer]
-# Run soon after boot and then every 3 minutes
-OnBootSec=1min
-OnUnitActiveSec=3min
+# Run soon after boot and then every 10 seconds in the hope of catching any outage
+OnBootSec=10
+OnUnitActiveSec=10
+AccuracySec=1
 # This is required to make the OnUnitActiveSec directive work reliably
 Requires=ferretcamchecker.service
 
@@ -207,4 +214,4 @@ Requires=ferretcamchecker.service
 WantedBy=timers.target
 ```
 
-I then loaded all this up with the usual `systemctl daemon-reload`, `systemctl start ferretcamchecker.timer` and enabled it at boot with `systemctl enable ferretcamchecker.timer`.
+I then loaded all this up with the usual `systemctl daemon-reload`, `systemctl start ferretcamchecker.timer` and enabled it at boot with `systemctl enable ferretcamchecker.timer`.  Hopefully, running the script so frequently, it will happen to run when the outage occurs and can recover matters.
