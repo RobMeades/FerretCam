@@ -160,13 +160,13 @@ And here it is: [http://rob-server.redirectme.net:8080/](http://rob-server.redir
 
 # Improving Viewing Robustness
 
-I did find one issue, which is that when there is a break in the incoming stream VLC neither exits nor recovers, which is a pain.  I tried [various ways to resolve this](https://forum.videolan.org/viewtopic.php?f=13&t=150888) but none of the parameters to VLC did what I wanted so instead I created a timer service which checks that the camera stream is there, if it not it attempts to reboot the camera and, in any case, it restarts the `ferretcam` service.  To do this, I created a shell script, e.g. `/etc/ferretcamchecker.sh` with the following contents:
+I did find one issue, which is that when there is a break in the incoming stream VLC neither exits nor recovers, which is a pain.  I tried [various ways to resolve this](https://forum.videolan.org/viewtopic.php?f=13&t=150888) but none of the parameters to VLC did what I wanted so instead I created a timer service which checks that the camera stream is there, if it is not attempts to reboot the camera and restarts the `ferretcam` service.  To do this, I created a shell script, e.g. `/etc/ferretcamchecker.sh` with the following contents:
 
 ```
 #!/bin/bash
 logger FerretCam: checking FerretCam stream...
 if ! curl http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/get_status.cgi --max-time 8 --head --silent --output /dev/null; then
-  logger FerretCam: stream not responding, checking if it can be rebooted...
+  logger FerretCam: stream is not responding, checking if it can be rebooted...
   if curl http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/reboot.cgi  --max-time 8 --silent --output /dev/null; then
     logger FerretCam: rebooted, waiting 60 seconds for it to restart...
     sleep 60
@@ -214,4 +214,4 @@ Requires=ferretcamchecker.service
 WantedBy=timers.target
 ```
 
-I then loaded all this up with the usual `systemctl daemon-reload`, `systemctl start ferretcamchecker.timer` and enabled it at boot with `systemctl enable ferretcamchecker.timer`.  Hopefully, running the script so frequently, it will happen to run when the outage occurs and can recover matters.
+I then loaded all this with the usual `systemctl daemon-reload`, `systemctl start ferretcamchecker.timer` and enabled it at boot with `systemctl enable ferretcamchecker.timer`.  Hopefully, running the script so frequently, it will happen to run when the outage occurs and can recover matters.
