@@ -164,15 +164,21 @@ I did find one issue, which is that when there is a break in the incoming stream
 
 ```
 #!/bin/bash
-logger FerretCam: checking FerretCam stream...
-if ! curl http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/get_status.cgi --max-time 8 --head --silent --output /dev/null; then
-  logger FerretCam: stream is not responding, checking if it can be rebooted...
-  if curl http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/reboot.cgi  --max-time 8 --silent --output /dev/null; then
+logger FerretCam: checking if FerretCam is streaming...
+unix_last_update=$(stat -c %Y /var/www/ferretcam/public_html/ferretcam.m3u8)
+unix_time_now=$(date +%s)
+age=$(( ${unix_time_now} - ${unix_last_update} ))
+limit=60
+logger FerretCam: stream last updated ${age} second\(s\) ago.
+if (( ${age} > ${limit} )); then
+  logger FerretCam: more than ${limit} seconds, checking if the camera can be rebooted...
+  if curl http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/reboot.cgi --max-time 8 --silent --output /dev/null; then
     logger FerretCam: rebooted, waiting 60 seconds for it to restart...
     sleep 60
-    logger FerretCam: setting time on FerretCam...
-    if curl -H "Content-Type: text/plain;charset=UTF-8" -d "092321082019" -X POST http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/goform/NTPSyncWithHost; then
-      logger FerretCam: time set.
+    cam_time_now=$(TZ=":Europe/London" date +%m%d%H%M%Y)
+    logger FerretCam: setting time on FerretCam to ${cam_time_now}...
+    if curl -H "Content-Type: text/plain;charset=UTF-8" -d "${cam_time_now}" -X POST http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/goform/NTPSyncWithHost; then
+      logger FerretCam: time set on FerretCam.
     else
       logger FerretCam: unable to set time on FerretCam.
     fi
@@ -181,8 +187,6 @@ if ! curl http://CAM_USERNAME:CAM_PASSWORD@IP_ADDRESS:CAM_PORT/get_status.cgi --
   fi
   logger FerretCam: restarting FerretCam service...
   systemctl restart ferretcam.service
-else
-  logger FerretCam: stream is still responding.
 fi
 ```
 
