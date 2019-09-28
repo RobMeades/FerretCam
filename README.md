@@ -219,4 +219,4 @@ Requires=ferretcamchecker.service
 WantedBy=timers.target
 ```
 
-I then loaded all this with the usual `systemctl daemon-reload`, `systemctl start ferretcamchecker.timer` and enabled it at boot with `systemctl enable ferretcamchecker.timer`.  Hopefully, running the script so frequently, it will happen to run when the outage occurs and can recover matters.
+I then loaded all this with the usual `systemctl daemon-reload`, `systemctl start ferretcamchecker.timer` and enabled it at boot with `systemctl enable ferretcamchecker.timer`.  This should spot an outage and recover the stream unless it is my router that is at fault.
