@@ -207,11 +207,12 @@ ExecStart=/etc/ferretcamchecker.sh
 Description=FerretCam checker
 
 [Timer]
-# Run soon after boot and then every 10 seconds in the hope of catching any outage
+# Run soon after boot and then every 120 seconds
 OnBootSec=10
-OnUnitActiveSec=10
+OnUnitActiveSec=120
 AccuracySec=1
 # This is required to make the OnUnitActiveSec directive work reliably
+# see https://github.com/systemd/systemd/issues/6680
 Requires=ferretcamchecker.service
 
 [Install]
